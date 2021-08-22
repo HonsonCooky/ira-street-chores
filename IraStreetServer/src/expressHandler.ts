@@ -118,7 +118,7 @@ const sendUpdate2 = (name: string, deviceID: string, chore: string) => {
     })
 }
 
-const matchUserToChore = (users: Array<{ name: string, deviceId: string }>,
+const matchUserToChore = (users: Array<{ name: string, deviceID: string }>,
                           chores: Array<{ onDuty: string, chore: string }>) => {
 
     let now = new Date().toUTCString()
@@ -130,9 +130,9 @@ const matchUserToChore = (users: Array<{ name: string, deviceId: string }>,
             if (chore.onDuty === user.name) {
                 // Check times vs chores and update accordingly
                 if (now.includes("Mon")) {
-                    sendUpdate(user.name, user.deviceId, chore.chore)
+                    sendUpdate(user.name, user.deviceID, chore.chore)
                 } else if (chore.chore.includes("Rubbish") && now.includes("Thu")){
-                    sendUpdate2(user.name, user.deviceId, chore.chore)
+                    sendUpdate2(user.name, user.deviceID, chore.chore)
                 }
                 break;
             }
