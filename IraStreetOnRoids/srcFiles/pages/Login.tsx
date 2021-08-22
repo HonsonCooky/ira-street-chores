@@ -44,7 +44,7 @@ class Login extends Component<ps, any> {
                 finalStatus = status;
             }
             if (finalStatus !== 'granted') {
-                alert('Failed to get push token for push notification!');
+                this.setState({deviceID: "none"})
                 return;
             }
             const token = (await Notifications.getExpoPushTokenAsync()).data;
@@ -68,9 +68,7 @@ class Login extends Component<ps, any> {
     async attemptSignup(): Promise<any> {
         if (this.state.text.length === 0) return {noText: true}
         await this.registerForPushNotificationsAsync()
-        this.setState({text: this.state.text.trim()})
-        let status = await setUser(this.state.text, this.state.isFlatmate, this.state.deviceID).catch(_ => 500)
-        if (status === 400 || status === 500) return {err: true, atSignupFirst: false}
+        await setUser(this.state.text, this.state.isFlatmate, this.state.deviceID)
         let login = await this.attemptLogin()
         login.atSignupFirst = false;
         return login
