@@ -70,7 +70,7 @@ export const UserSchema = new schema({
         type: Boolean,
         required: true
     },
-    deviceId: {
+    deviceID: {
         type: String,
         required: true
     },

@@ -47,7 +47,7 @@ class Login extends Component<ps, any> {
                 this.setState({deviceID: "none"})
                 return;
             }
-            const token = (await Notifications.getExpoPushTokenAsync()).data ? (await Notifications.getExpoPushTokenAsync()).data : "none";
+            const token = (await Notifications.getExpoPushTokenAsync()).data
             await storeData(StoreKey.notificationToken, token).then(() => {
                 this.setState({deviceID: token})
             }).catch(() => {this.setState({deviceID: "none"})})
@@ -68,7 +68,8 @@ class Login extends Component<ps, any> {
     async attemptSignup(): Promise<any> {
         if (this.state.text.length === 0) return {noText: true}
         await this.registerForPushNotificationsAsync()
-        await setUser(this.state.text, this.state.isFlatmate, this.state.deviceID)
+        console.log(this.state.deviceID)
+        await setUser(this.state.text, this.state.isFlatmate, this.state.deviceID).then((res) => console.log(res)).catch((e) => console.log("ERROR", e))
         let login = await this.attemptLogin()
         login.atSignupFirst = false;
         return login

@@ -316,6 +316,8 @@ restful.post('/write-user', jsonHandler, (req: Request, res: Response) => {
     if (!isConnectedToDatabase(res)) return
     else if (!isValidReq("Write user", true, req, res, "name", "isFlatmate", "deviceID")) return
 
+    console.log(req.body.name, req.body.isFlatmate === true, req.body.deviceID)
+
     // Add the user
     writeUser(req.body.name, req.body.isFlatmate === true, req.body.deviceID)
         .then(() => {
