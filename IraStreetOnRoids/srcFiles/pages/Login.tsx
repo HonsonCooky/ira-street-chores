@@ -82,7 +82,6 @@ class Login extends Component<ps, any> {
         return await getUser(this.state.text).then(async res => {
             // Valid user, get the name
             if (Array.isArray(res) && res[0] && res[0].name) {
-                console.log(res)
                 // Store name, such that the user doesn't have to always login
                 return await storeData(StoreKey.UserName, res).then(res => {
                     if (res) {

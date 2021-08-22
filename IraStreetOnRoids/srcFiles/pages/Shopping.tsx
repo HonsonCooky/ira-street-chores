@@ -252,7 +252,6 @@ class Shopping extends Component {
                             }
                         })
                         .catch((e) => {
-                            console.log(e)
                             this.setState(this.resetState("Unable to get shopping"))
                         })
                 })}
