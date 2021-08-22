@@ -132,7 +132,7 @@ class Bills extends Component {
             return (
                 <View style={styles.component}>
                     <Text style={styles.title3}>Bills</Text>
-                    {renderList3(this.state.bills)}
+                    {renderList3(this.state.bills? this.state.bills.reverse() : [])}
                 </View>
             )
         }

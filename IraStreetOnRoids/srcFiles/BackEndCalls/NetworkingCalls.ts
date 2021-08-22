@@ -1,7 +1,5 @@
 import fetch from "node-fetch"
-
-// const iraStUri = "https://ira-street-app.herokuapp.com/"
-const iraStUri = "localhost:3200/"
+const iraStUri = "https://ira-street-app.herokuapp.com/"
 
 /**-----------------------------------------------------------------------------------------------------------------
  * GETS
@@ -52,18 +50,17 @@ export const getFlatHistory = async() => {
  -----------------------------------------------------------------------------------------------------------------*/
 
 export const setUser = async(u : string, isF: boolean, dId: string) => {
+    console.log(isF)
     let uri = new URL(iraStUri + "write-user")
-    console.log(dId)
     return await fetch(uri.toString(), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({name: u, isFlatmate: isF, deviceID: dId})
+    }).then(res => res.status).then(res => {
+        return res
     })
-    //     .then(res => res.status).then(res => {
-    //     return res
-    // })
 }
 
 export const deleteUser = async (u: string) => {

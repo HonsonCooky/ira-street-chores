@@ -5,7 +5,6 @@ import {asyncHelper, renderList, UserContext} from "../utils/Utils";
 import {RefreshControl, ScrollView, View} from "react-native";
 import {Ionicons} from "@expo/vector-icons";
 import {deleteUser, getUser, setUser} from "../BackEndCalls/NetworkingCalls";
-import {getData, StoreKey} from "../BackEndCalls/AsyncStorage";
 import App from "../../App";
 
 interface ps {
@@ -41,15 +40,15 @@ class Settings extends Component<ps> {
      * LOGIC
      --------------------------------------------------------------------------------------------------------------*/
 
-    getUserInformation() {
+    getUserInformation(user: string) {
         if (this.state.name.length === 0 || this.state.refresh) {
             return (
                 <View style={styles.component}>
                     <Text style={styles.title3}>User Information</Text>
                     {
 
-                        asyncHelper(() => getData(StoreKey.UserName).then(r => {
-                            let res = r ? JSON.parse(r) : "";
+                        asyncHelper(() => getUser(user).then(r => {
+                            let res = r ? JSON.parse(JSON.stringify(r)) : "";
                             if (Array.isArray(res) && res[0] && res[0].name) {
                                 const {name, isFlatmate, fmUUID} = res[0]
                                 this.setState({
@@ -88,12 +87,14 @@ class Settings extends Component<ps> {
             <View style={styles.componentNoBack}>
                 <Text style={styles.title4}>Updating</Text>
                 {asyncHelper(() => {
-                    return getUser(this.state.name).then(({deviceID}) => {
-                        console.log(deviceID)
-                        setUser(this.state.name, this.state.newFlatmate, deviceID).then((res) => {
-                            this.setState(this.resetState("Details Updated"))
-                            this.setState({isFlatmate: this.state.newFlatmate})
-                        }).catch(() => this.setState(this.resetState("Unable to update")))
+                    return getUser(this.state.name).then((r) => {
+                        let res = JSON.parse(JSON.stringify(r))
+                        if (Array.isArray(res) && res[0] && res[0].deviceID) {
+                            setUser(this.state.name, this.state.newFlatmate, res[0].deviceID).then(() => {
+                                this.setState(this.resetState("Details Updated", true))
+                                this.setState({isFlatmate: this.state.newFlatmate})
+                            }).catch(() => this.setState(this.resetState("Unable to update")))
+                        }
                     }).catch(() => this.setState(this.resetState("Unable to update")))
                 })
                 }
@@ -149,7 +150,7 @@ class Settings extends Component<ps> {
     mainComponent(user: string) {
         return (
             <View>
-                {this.getUserInformation()}
+                {this.getUserInformation(user)}
                 <View style={styles.componentNoBack}>
                     <HelperText type="error" visible={this.state.errMsg.length > 0} style={styles.helpText}>
                         {this.state.errMsg}

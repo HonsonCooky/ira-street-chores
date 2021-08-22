@@ -68,8 +68,8 @@ class Login extends Component<ps, any> {
     async attemptSignup(): Promise<any> {
         if (this.state.text.length === 0) return {noText: true}
         await this.registerForPushNotificationsAsync()
-        console.log(this.state.deviceID)
-        await setUser(this.state.text, this.state.isFlatmate, this.state.deviceID).then((res) => console.log(res)).catch((e) => console.log("ERROR", e))
+        let res = await setUser(this.state.text, this.state.isFlatmate, this.state.deviceID)
+        if (res === 400 || res === 500) return {err: true}
         let login = await this.attemptLogin()
         login.atSignupFirst = false;
         return login
