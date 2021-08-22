@@ -68,22 +68,17 @@ export const removeBill = async (n: string) => {
  * CHORES
  ---------------------------------------------------------------------------------------------------------------------*/
 
-export const updateChores = async (forceUpdate: boolean) => {
+export const updateChores = async () => {
     // First, check when chores were last updated
     let c = await Chores.find({}).select('chore updatedAt')
     if (c === null || c[0] == null) return;
-    // If last update was more than
-    let updateWeek = getWeekNumber(new Date(Date.parse(c[0].updatedAt)))
     let curWeek = getWeekNumber(new Date())
-    // let curWeek = getWeekNumber(new Date(Date.parse('2021-07-27T08:06:37.767+00:00'))) // Testing
-    if (updateWeek != curWeek || forceUpdate) {
-        let users = await UserData.find({isFlatmate: true}).select('name')
-        for (let i = 0; i < c.length; ++i) {
-            let userOffset = (curWeek + i) % users.length
-            let userName = users[userOffset] ? users[userOffset].name : "N/A"
-            let chore = c[i].chore
-            await updateChore(chore, userName)
-        }
+    let users = await UserData.find({isFlatmate: true}).select('name')
+    for (let i = 0; i < c.length; ++i) {
+        let userOffset = (curWeek + i) % users.length
+        let userName = users[userOffset] ? users[userOffset].name : "N/A"
+        let chore = c[i].chore
+        await updateChore(chore, userName)
     }
 }
 

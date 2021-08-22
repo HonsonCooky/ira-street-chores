@@ -203,7 +203,7 @@ restful.post('/remove-bill', jsonHandler, (req: Request, res: Response) => {
  */
 restful.get('/chores', (req: Request, res: Response) => {
     if (!isConnectedToDatabase(res)) return
-    updateChores(false)
+    updateChores()
         .then(() => getAllChores()
             .then((val) =>
                 res.status(200).send(val)))
@@ -219,7 +219,7 @@ restful.post('/add-chore', jsonHandler, (req: Request, res: Response) => {
     else if (!isValidReq("Add Chore", true, req, res, "chore")) return
 
     addChore(req.body.chore)
-        .then(() => updateChores(true)
+        .then(() => updateChores()
             .then(() => res.status(200).send()))
         .catch(() => {
             res.status(400).send("Unable to add chore")
@@ -236,7 +236,7 @@ restful.post('/remove-chore', jsonHandler, (req: Request, res: Response) => {
     else if (!isValidReq("Remove Chore", true, req, res, "chore")) return
 
     removeChore(req.body.chore)
-        .then(() => updateChores(true)
+        .then(() => updateChores()
             .then(() => res.status(200).send()))
         .catch(() => {
             res.status(400).send("Unable to remove chore")
@@ -319,7 +319,7 @@ restful.post('/write-user', jsonHandler, (req: Request, res: Response) => {
     // Add the user
     writeUser(req.body.name, req.body.isFlatmate === true, req.body.deviceID)
         .then(() => {
-            updateChores(true)
+            updateChores()
                 .then(() => res.status(200).send())
         })
         .catch(() => res.status(400).send("Unable to add user, possibly already added"))
