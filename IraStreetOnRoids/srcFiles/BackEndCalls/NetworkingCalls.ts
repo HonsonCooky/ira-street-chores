@@ -116,6 +116,20 @@ export const writeBill = async (c: string, a: number) => {
 }
 
 
+export const deleteBill = async (c: string) => {
+    let uri = new URL(iraStUri + "remove-bill")
+    return await fetch(uri.toString(), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({company: c})
+    }).then(res => res.status).then(res => {
+        return res
+    })
+}
+
+
 
 export const writeChore = async (c: string) => {
     let uri = new URL(iraStUri + "add-chore")

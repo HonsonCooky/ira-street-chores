@@ -3,7 +3,7 @@ import {RefreshControl, ScrollView, View} from "react-native";
 import {para1Size, styles} from "../utils/Styles";
 import {asyncHelper, renderList3, UserContext} from "../utils/Utils";
 import {Button, HelperText, Text, TextInput} from "react-native-paper";
-import {getBills, writeBill} from "../BackEndCalls/NetworkingCalls";
+import {getBills, writeBill, deleteBill} from "../BackEndCalls/NetworkingCalls";
 import {Ionicons} from "@expo/vector-icons";
 
 class Bills extends Component {
@@ -67,13 +67,13 @@ class Bills extends Component {
                 <TextInput style={styles.input2}
                            label={'Company'} value={this.state.company}
                            mode={"flat"}
-                           onChangeText={t => this.setState({company: t})}
+                           onChangeText={t => this.setState({company: t.trim()})}
                 />
 
                 <TextInput style={styles.input2}
                            label={'$ Amount'} value={this.state.amount}
                            mode={"flat"}
-                           onChangeText={t => this.setState({amount: t})}
+                           onChangeText={t => this.setState({amount: t.trim()})}
                            keyboardType={"number-pad"}
                            left={<TextInput.Affix text={"$ "} textStyle={styles.para2}/>}
                 />
@@ -81,6 +81,12 @@ class Bills extends Component {
                         onPress={() => this.addBillLogic()}>
                     <Ionicons name={"add-outline"} size={para1Size}/>
                     <Text style={styles.para1}> Add Bill</Text>
+                </Button>
+
+                <Button mode={"contained"} style={styles.button}
+                        onPress={() => this.removeBillLogic()}>
+                    <Ionicons name={"trash-outline"} size={para1Size}/>
+                    <Text style={styles.para1}> Remove Bill</Text>
                 </Button>
 
                 <HelperText type="error" visible={this.state.errMsg.length != 0}
@@ -101,6 +107,16 @@ class Bills extends Component {
             })
             .catch(() => {
                 this.setState({errMsg: "Unable to add bill"})
+            })
+    }
+
+    removeBillLogic() {
+        deleteBill(this.state.company)
+            .then(() => {
+                this.setState(this.resetState("Removed latest Bill", true))
+            })
+            .catch(() => {
+                this.setState({errMsg: "Unable to remove bill"})
             })
     }
 

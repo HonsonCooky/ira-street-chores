@@ -179,7 +179,7 @@ class Login extends Component<ps, any> {
                     <TextInput style={styles.input}
                                label={'Username'} value={this.state.text}
                                mode={"flat"}
-                               onChangeText={t => this.setState({text: t})}
+                               onChangeText={t => this.setState({text: t.trim()})}
                     />
                     <View>{this.loginButton()}</View>
                     <View>{this.signupButton()}</View>
@@ -202,7 +202,7 @@ class Login extends Component<ps, any> {
                     <TextInput style={styles.input}
                                label={'Username'} value={this.state.text}
                                mode={"flat"}
-                               onChangeText={t => this.setState({text: t})}
+                               onChangeText={t => this.setState({text: t.trim()})}
                     />
                     <View>{this.signupComponents()}</View>
 
