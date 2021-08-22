@@ -50,7 +50,13 @@ class Bills extends Component {
                         bills: []
                     })
                 }
-            })
+            }).catch(() =>
+                this.setState({
+                    dataLoaded: true,
+                    refresh: false,
+                    bills: []
+                })
+            )
         })
     }
 
@@ -106,8 +112,7 @@ class Bills extends Component {
                     {this.loadBills()}
                 </View>
             )
-        }
-        else if (this.state.bills.length > 0) {
+        } else if (this.state.bills.length > 0) {
             return (
                 <View style={styles.component}>
                     <Text style={styles.title3}>Bills</Text>

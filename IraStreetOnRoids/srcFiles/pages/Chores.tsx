@@ -135,6 +135,7 @@ class Chores extends Component {
                     <Text style={styles.title3}>Who's On What?</Text>
                     {asyncHelper(() => {
                         this.loadChores.bind(this)().then(() => this.setState({refresh: false, errMsg: ""}))
+                            .catch(() => this.setState({refresh: false, errMsg: "Unable to load chores"}))
                     })}
                 </View>
             )

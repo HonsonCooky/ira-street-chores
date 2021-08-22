@@ -50,7 +50,7 @@ class Login extends Component<ps, any> {
             const token = (await Notifications.getExpoPushTokenAsync()).data;
             await storeData(StoreKey.notificationToken, token).then(() => {
                 this.setState({deviceID: token})
-            })
+            }).catch(() => {this.setState({deviceID: "none"})})
         } else {
             alert('Must use physical device for Push Notifications');
         }
@@ -82,16 +82,21 @@ class Login extends Component<ps, any> {
         return await getUser(this.state.text).then(async res => {
             // Valid user, get the name
             if (Array.isArray(res) && res[0] && res[0].name) {
+                console.log(res)
                 // Store name, such that the user doesn't have to always login
                 return await storeData(StoreKey.UserName, res).then(res => {
                     if (res) {
                         return {loginSuccess: true}
                     }
                     return {err: true}
+                }).catch(() => {
+                    return {err: true}
                 })
             } else {
                 return {invalidAcc: true}
             }
+        }).catch(() => {
+            return {err: true}
         })
     }
 
@@ -229,6 +234,7 @@ class Login extends Component<ps, any> {
                             atSignup = false,
                             atSignupFirst = false,
                             loginSuccess = false,
+                            deviceID = ""
                         } = r;
 
                         this.setState({
@@ -239,8 +245,19 @@ class Login extends Component<ps, any> {
                             atSignup: atSignup,
                             atSignupFirst: atSignupFirst,
                             loginSuccess: loginSuccess,
+                            deviceID: deviceID
                         })
-                    })
+                    }).catch(() =>
+                        this.setState({
+                            invalidAcc: false,
+                            err: "Login attempt failed",
+                            noText: false,
+                            atLogin: false,
+                            atSignup: false,
+                            atSignupFirst: false,
+                            loginSuccess: false,
+                            deviceID: ""
+                        }))
                 })}
             </View>
         )
@@ -258,6 +275,7 @@ class Login extends Component<ps, any> {
                             atLogin = false,
                             atSignup = false,
                             loginSuccess = false,
+                            deviceID = ""
                         } = r;
 
                         this.setState({
@@ -267,8 +285,19 @@ class Login extends Component<ps, any> {
                             atLogin: atLogin,
                             atSignup: atSignup,
                             loginSuccess: loginSuccess,
+                            deviceID: deviceID
                         })
-                    })
+                    }).catch(() =>
+                        this.setState({
+                            invalidAcc: false,
+                            err: "Signup attempt failed",
+                            noText: false,
+                            atLogin: false,
+                            atSignup: false,
+                            atSignupFirst: false,
+                            loginSuccess: false,
+                            deviceID: ""
+                        }))
                 })}
             </View>
         )

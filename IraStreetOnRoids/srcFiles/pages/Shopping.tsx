@@ -106,7 +106,7 @@ class Shopping extends Component {
                                 this.setState(this.resetState("", true))
                             }
 
-                        })
+                        }).catch(() => this.setState(this.resetState("Unable to add item, (Storage Error)")))
                     }
 
                     // FLAT SHOPPING
@@ -142,7 +142,7 @@ class Shopping extends Component {
                             this.setState(this.resetState("Unable to some delete item"))
                         else
                             this.setState(this.resetState("", true))
-                    })
+                    }).catch(() => this.setState(this.resetState("Unable to some delete item")))
                 })}
             </View>
         )
@@ -548,7 +548,12 @@ class Shopping extends Component {
                                         flatHistoryList: []
                                     })
                                 }
-                            })
+                            }).catch(() =>
+                            this.setState({
+                                flatHistoryLoaded: true,
+                                refresh: false,
+                                flatHistoryList: []
+                            }))
                     })}
                 </View>
             )

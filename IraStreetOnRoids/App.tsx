@@ -24,13 +24,13 @@ class App extends Component {
                 let name = JSON.parse(res)[0].name
                 if (name) this.setState({user: name})
             }
-        })
+        }).catch(() => this.setState({dataLoaded: true}))
     }
 
     removeState(){
         clearUserData().then(_ =>
             this.setState({user: "", dataLoaded: false})
-        )
+        ).catch(() => {this.setState({user: "", dataLoaded: false})})
     }
 
     manageAppStart() {

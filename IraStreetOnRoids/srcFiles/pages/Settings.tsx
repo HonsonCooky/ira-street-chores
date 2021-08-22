@@ -92,8 +92,8 @@ class Settings extends Component<ps> {
                         setUser(this.state.name, this.state.newFlatmate, deviceID).finally(() => {
                             this.setState(this.resetState("Details Updated"))
                             this.setState({isFlatmate: this.state.newFlatmate})
-                        })
-                    })
+                        }).catch(() => this.setState(this.resetState("Unable to update")))
+                    }).catch(() => this.setState(this.resetState("Unable to update")))
                 })
                 }
             </View>
