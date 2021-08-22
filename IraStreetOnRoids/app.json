@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#cbf3f0"
-      }
+      },
+      "package": "com.honsoncooky.IraStreetOnRoids"
     },
     "web": {
       "favicon": "./assets/favicon.png"
