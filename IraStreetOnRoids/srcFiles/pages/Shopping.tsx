@@ -251,7 +251,7 @@ class Shopping extends Component {
                                 this.setState(this.resetState("Unable to get user data"))
                             }
                         })
-                        .catch((e) => {
+                        .catch(() => {
                             this.setState(this.resetState("Unable to get shopping"))
                         })
                 })}
@@ -483,7 +483,7 @@ class Shopping extends Component {
                     <TextInput style={styles.input}
                                label={'Item'} value={this.state.text}
                                mode={"flat"}
-                               onChangeText={t => this.setState({text: t.trim()``})}
+                               onChangeText={t => this.setState({text: t.trim()})}
                     />
 
                     <RadioButton.Item
