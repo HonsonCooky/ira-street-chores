@@ -47,7 +47,7 @@ class Login extends Component<ps, any> {
                 this.setState({deviceID: "none"})
                 return;
             }
-            const token = (await Notifications.getExpoPushTokenAsync()).data;
+            const token = (await Notifications.getExpoPushTokenAsync()).data ? (await Notifications.getExpoPushTokenAsync()).data : "none";
             await storeData(StoreKey.notificationToken, token).then(() => {
                 this.setState({deviceID: token})
             }).catch(() => {this.setState({deviceID: "none"})})
@@ -98,7 +98,7 @@ class Login extends Component<ps, any> {
     }
 
     errorMsg() {
-        let msg = this.state.err ? "Some error occurred, try again?" :
+        let msg = this.state.err ? `Some error occurred, try again? ${this.state.deviceID}  ${this.state.text} ${this.state.isFlatmate}` :
             this.state.invalidAcc ? "Unknown user. Try again, or signup" :
                 "No username entered"
         return (msg)

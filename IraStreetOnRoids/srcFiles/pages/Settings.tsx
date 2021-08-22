@@ -89,7 +89,8 @@ class Settings extends Component<ps> {
                 <Text style={styles.title4}>Updating</Text>
                 {asyncHelper(() => {
                     return getUser(this.state.name).then(({deviceID}) => {
-                        setUser(this.state.name, this.state.newFlatmate, deviceID).finally(() => {
+                        console.log(deviceID)
+                        setUser(this.state.name, this.state.newFlatmate, deviceID).then((res) => {
                             this.setState(this.resetState("Details Updated"))
                             this.setState({isFlatmate: this.state.newFlatmate})
                         }).catch(() => this.setState(this.resetState("Unable to update")))

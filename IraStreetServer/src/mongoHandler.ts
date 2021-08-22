@@ -182,7 +182,7 @@ export const writeUser = async (n: string, isF: boolean, dID: string) => {
     if (doc) {
         return UserData.findOneAndUpdate({name: n}, {
             isFlatmate: isF,
-            deviceId: dID,
+            deviceID: dID,
         }, {useFindAndModify: false})
     } else {
         return UserData.countDocuments((err, count) => {
@@ -192,7 +192,7 @@ export const writeUser = async (n: string, isF: boolean, dID: string) => {
                 name: n,
                 fmUUID: count,
                 isFlatmate: isF,
-                deviceId: dID,
+                deviceID: dID,
                 personalShoppingList: []
             }).save()
         })
