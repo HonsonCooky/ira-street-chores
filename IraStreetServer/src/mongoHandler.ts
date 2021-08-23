@@ -175,14 +175,12 @@ export const updateUserShopping = async (n: string, items: string[]) => {
  * Update / Add user
  * @param n - Name of user
  * @param isF - Is flatmate boolean
- * @param dID
  */
-export const writeUser = async (n: string, isF: boolean, dID: string) => {
+export const writeUser = async (n: string, isF: boolean) => {
     let doc = await UserData.findOne({name: n})
     if (doc) {
         return UserData.findOneAndUpdate({name: n}, {
             isFlatmate: isF,
-            deviceID: dID,
         }, {useFindAndModify: false})
     } else {
         return UserData.countDocuments((err, count) => {
@@ -192,7 +190,6 @@ export const writeUser = async (n: string, isF: boolean, dID: string) => {
                 name: n,
                 fmUUID: count,
                 isFlatmate: isF,
-                deviceID: dID,
                 personalShoppingList: []
             }).save()
         })

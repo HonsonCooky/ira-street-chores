@@ -87,14 +87,11 @@ class Settings extends Component<ps> {
             <View style={styles.componentNoBack}>
                 <Text style={styles.title4}>Updating</Text>
                 {asyncHelper(() => {
-                    return getUser(this.state.name).then((r) => {
-                        let res = JSON.parse(JSON.stringify(r))
-                        if (Array.isArray(res) && res[0] && res[0].deviceID) {
-                            setUser(this.state.name, this.state.newFlatmate, res[0].deviceID).then(() => {
-                                this.setState(this.resetState("Details Updated", true))
-                                this.setState({isFlatmate: this.state.newFlatmate})
-                            }).catch(() => this.setState(this.resetState("Unable to update")))
-                        }
+                    return getUser(this.state.name).then(() => {
+                        setUser(this.state.name, this.state.newFlatmate).then(() => {
+                            this.setState(this.resetState("Details Updated", true))
+                            this.setState({isFlatmate: this.state.newFlatmate})
+                        }).catch(() => this.setState(this.resetState("Unable to update")))
                     }).catch(() => this.setState(this.resetState("Unable to update")))
                 })
                 }

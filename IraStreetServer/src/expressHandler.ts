@@ -1,6 +1,5 @@
 import express, {Request, Response} from 'express';
 import bodyParser from "body-parser";
-import fetch from "node-fetch"
 import {
     writeUser,
     connectDB,
@@ -14,7 +13,7 @@ import {
     historyFlatShopping,
     updateChores,
     addBill,
-    getBills, deleteUser, removeChore, removeBill, notificationSearchUsers, notificationSearchChores
+    getBills, deleteUser, removeChore, removeBill
 } from "./mongoHandler";
 
 const restful = express();
@@ -80,83 +79,6 @@ const isValidReq = (errTitle: String, isJson: boolean, req: Request, res: Respon
         }
     })
     return ret
-}
-
-const sendUpdate = (name: string, deviceID: string, chore: string) => {
-    fetch("https://exp.host/--/api/v2/push/send", {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            'Content-Type': "application/json"
-        },
-        body: JSON.stringify({
-            to: deviceID,
-            sound: "default",
-            title: "Chore Update",
-            body: `Hey ${name}, you're on ${chore} this week`
-        })
-    }).then((res) => {
-        console.log(res.status)
-    })
-}
-
-const sendUpdate2 = (name: string, deviceID: string, chore: string) => {
-    fetch("https://exp.host/--/api/v2/push/send", {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-            'Content-Type': "application/json"
-        },
-        body: JSON.stringify({
-            to: deviceID,
-            sound: "default",
-            title: "Chore Update",
-            body: `Hey ${name}, remember, you're on ${chore} this week`
-        })
-    }).then((res) => {
-        console.log(res.status)
-    })
-}
-
-const matchUserToChore = (users: Array<{ name: string, deviceID: string }>,
-                          chores: Array<{ onDuty: string, chore: string }>) => {
-
-    let now = new Date().toUTCString()
-
-    for (let i = 0; i < chores.length; i++) {
-        for (let j = 0; j < users.length; j++) {
-            let chore = chores[i]
-            let user = users[j]
-            if (chore.onDuty === user.name) {
-                // Check times vs chores and update accordingly
-                if (now.includes("Mon")) {
-                    sendUpdate(user.name, user.deviceID, chore.chore)
-                } else if (chore.chore.includes("Rubbish") && now.includes("Thu")){
-                    sendUpdate2(user.name, user.deviceID, chore.chore)
-                }
-                break;
-            }
-        }
-    }
-}
-
-const notificationPusher = async () => {
-    let users = await notificationSearchUsers();
-    let chores = await notificationSearchChores();
-    matchUserToChore(users, chores)
-    recursiveUpdate();
-}
-
-const recursiveUpdate = () => {
-    // Attempt update tomorrow at 10am
-    let today = new Date()
-    today.setHours(10, 0, 0)
-    let tomorrow = new Date(today)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    let diff = tomorrow.getTime() - Date.now()
-
-
-    setTimeout(notificationPusher.bind(this), diff)
 }
 
 
@@ -314,12 +236,10 @@ restful.get('/user?:name', (req: Request, res: Response) => {
 restful.post('/write-user', jsonHandler, (req: Request, res: Response) => {
     //Ensure we can call
     if (!isConnectedToDatabase(res)) return
-    else if (!isValidReq("Write user", true, req, res, "name", "isFlatmate", "deviceID")) return
-
-    console.log(req.body.name, req.body.isFlatmate === true, req.body.deviceID)
+    else if (!isValidReq("Write user", true, req, res, "name", "isFlatmate")) return
 
     // Add the user
-    writeUser(req.body.name, req.body.isFlatmate === true, req.body.deviceID)
+    writeUser(req.body.name, req.body.isFlatmate === true)
         .then(() => {
             updateChores()
                 .then(() => res.status(200).send())
@@ -363,5 +283,4 @@ restful.listen(PORT, () => {
 connectDB().then(() => {
     console.log("Connected to MANGODB")
     mongoReady = true
-    recursiveUpdate();
 }).catch(() => mongoReady = false)

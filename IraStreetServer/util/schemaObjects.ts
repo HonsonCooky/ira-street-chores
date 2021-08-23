@@ -70,10 +70,6 @@ export const UserSchema = new schema({
         type: Boolean,
         required: true
     },
-    deviceID: {
-        type: String,
-        required: true
-    },
     personalShoppingList: {
         type: [String],
         required: true,

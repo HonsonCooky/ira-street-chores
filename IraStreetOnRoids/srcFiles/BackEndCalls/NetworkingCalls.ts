@@ -49,15 +49,14 @@ export const getFlatHistory = async() => {
  * POST
  -----------------------------------------------------------------------------------------------------------------*/
 
-export const setUser = async(u : string, isF: boolean, dId: string) => {
-    console.log(isF)
+export const setUser = async(u : string, isF: boolean) => {
     let uri = new URL(iraStUri + "write-user")
     return await fetch(uri.toString(), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name: u, isFlatmate: isF, deviceID: dId})
+        body: JSON.stringify({name: u, isFlatmate: isF})
     }).then(res => res.status).then(res => {
         return res
     })

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Platform, View} from "react-native";
+import {View} from "react-native";
 import {para1Size, styles} from "../utils/Styles";
 import {Button, HelperText, RadioButton, Text, TextInput} from "react-native-paper";
 import {getUser, setUser} from "../BackEndCalls/NetworkingCalls";
@@ -8,8 +8,6 @@ import {Ionicons} from "@expo/vector-icons";
 import {storeData, StoreKey} from "../BackEndCalls/AsyncStorage";
 import App from "../../App";
 import {asyncHelper} from "../utils/Utils";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
 
 interface ps {
     par: App
@@ -26,49 +24,15 @@ class Login extends Component<ps, any> {
         atSignup: false,
         atSignupFirst: false,
         loginSuccess: false,
-        deviceID: ""
     }
 
     /**--------------------------------------------------------------------------------------------------------------
      * LOGIC
      --------------------------------------------------------------------------------------------------------------*/
 
-
-
-    registerForPushNotificationsAsync = async () => {
-        if (Device.isDevice) {
-            const { status: existingStatus } = await Notifications.getPermissionsAsync();
-            let finalStatus = existingStatus;
-            if (existingStatus !== 'granted') {
-                const { status } = await Notifications.requestPermissionsAsync();
-                finalStatus = status;
-            }
-            if (finalStatus !== 'granted') {
-                this.setState({deviceID: "none"})
-                return;
-            }
-            const token = (await Notifications.getExpoPushTokenAsync()).data
-            await storeData(StoreKey.notificationToken, token).then(() => {
-                this.setState({deviceID: token})
-            }).catch(() => {this.setState({deviceID: "none"})})
-        } else {
-            alert('Must use physical device for Push Notifications');
-        }
-
-        if (Platform.OS === 'android') {
-            return await Notifications.setNotificationChannelAsync('default', {
-                name: 'default',
-                importance: Notifications.AndroidImportance.MAX,
-                vibrationPattern: [0, 250, 250, 250],
-                lightColor: '#FF231F7C',
-            });
-        }
-    };
-
     async attemptSignup(): Promise<any> {
         if (this.state.text.length === 0) return {noText: true}
-        await this.registerForPushNotificationsAsync()
-        let res = await setUser(this.state.text, this.state.isFlatmate, this.state.deviceID)
+        let res = await setUser(this.state.text, this.state.isFlatmate)
         if (res === 400 || res === 500) return {err: true}
         let login = await this.attemptLogin()
         login.atSignupFirst = false;
@@ -82,7 +46,7 @@ class Login extends Component<ps, any> {
             // Valid user, get the name
             if (Array.isArray(res) && res[0] && res[0].name) {
                 // Store name, such that the user doesn't have to always login
-                return await storeData(StoreKey.UserName, res).then(res => {
+                return await storeData(StoreKey.UserName, res).then((res: any) => {
                     if (res) {
                         return {loginSuccess: true}
                     }
@@ -99,7 +63,7 @@ class Login extends Component<ps, any> {
     }
 
     errorMsg() {
-        let msg = this.state.err ? `Some error occurred, try again? ${this.state.deviceID}  ${this.state.text} ${this.state.isFlatmate}` :
+        let msg = this.state.err ? `Some error occurred, try again?` :
             this.state.invalidAcc ? "Unknown user. Try again, or signup" :
                 "No username entered"
         return (msg)
@@ -232,7 +196,6 @@ class Login extends Component<ps, any> {
                             atSignup = false,
                             atSignupFirst = false,
                             loginSuccess = false,
-                            deviceID = ""
                         } = r;
 
                         this.setState({
@@ -243,7 +206,6 @@ class Login extends Component<ps, any> {
                             atSignup: atSignup,
                             atSignupFirst: atSignupFirst,
                             loginSuccess: loginSuccess,
-                            deviceID: deviceID
                         })
                     }).catch(() =>
                         this.setState({
@@ -254,7 +216,6 @@ class Login extends Component<ps, any> {
                             atSignup: false,
                             atSignupFirst: false,
                             loginSuccess: false,
-                            deviceID: ""
                         }))
                 })}
             </View>
@@ -273,7 +234,6 @@ class Login extends Component<ps, any> {
                             atLogin = false,
                             atSignup = false,
                             loginSuccess = false,
-                            deviceID = ""
                         } = r;
 
                         this.setState({
@@ -283,7 +243,6 @@ class Login extends Component<ps, any> {
                             atLogin: atLogin,
                             atSignup: atSignup,
                             loginSuccess: loginSuccess,
-                            deviceID: deviceID
                         })
                     }).catch(() =>
                         this.setState({
@@ -294,7 +253,6 @@ class Login extends Component<ps, any> {
                             atSignup: false,
                             atSignupFirst: false,
                             loginSuccess: false,
-                            deviceID: ""
                         }))
                 })}
             </View>
