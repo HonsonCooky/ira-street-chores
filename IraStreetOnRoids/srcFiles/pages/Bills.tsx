@@ -67,13 +67,13 @@ class Bills extends Component {
                 <TextInput style={styles.input2}
                            label={'Company'} value={this.state.company}
                            mode={"flat"}
-                           onChangeText={t => this.setState({company: t.trim()})}
+                           onChangeText={t => this.setState({company: t})}
                 />
 
                 <TextInput style={styles.input2}
                            label={'$ Amount'} value={this.state.amount}
                            mode={"flat"}
-                           onChangeText={t => this.setState({amount: t.trim()})}
+                           onChangeText={t => this.setState({amount: t})}
                            keyboardType={"number-pad"}
                            left={<TextInput.Affix text={"$ "} textStyle={styles.para2}/>}
                 />

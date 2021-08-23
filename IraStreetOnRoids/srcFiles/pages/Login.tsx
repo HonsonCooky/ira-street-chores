@@ -32,17 +32,16 @@ class Login extends Component<ps, any> {
 
     async attemptSignup(): Promise<any> {
         if (this.state.text.length === 0) return {noText: true}
-        let res = await setUser(this.state.text, this.state.isFlatmate)
-        if (res === 400 || res === 500) return {err: true}
-        let login = await this.attemptLogin()
-        login.atSignupFirst = false;
-        return login
+        let userSet = await setUser(this.state.text.trim(), this.state.isFlatmate)
+        if (userSet === 400 || userSet === 500) return {err: true}
+        return await this.attemptLogin()
     }
 
     async attemptLogin(): Promise<any> {
         if (this.state.text.length === 0) return {noText: true}
 
-        return await getUser(this.state.text).then(async res => {
+        return await getUser(this.state.text.trim()).then(async res => {
+            console.log(res)
             // Valid user, get the name
             if (Array.isArray(res) && res[0] && res[0].name) {
                 // Store name, such that the user doesn't have to always login
@@ -141,7 +140,7 @@ class Login extends Component<ps, any> {
                     <TextInput style={styles.input}
                                label={'Username'} value={this.state.text}
                                mode={"flat"}
-                               onChangeText={t => this.setState({text: t.trim()})}
+                               onChangeText={t => this.setState({text: t})}
                     />
                     <View>{this.loginButton()}</View>
                     <View>{this.signupButton()}</View>
@@ -164,7 +163,7 @@ class Login extends Component<ps, any> {
                     <TextInput style={styles.input}
                                label={'Username'} value={this.state.text}
                                mode={"flat"}
-                               onChangeText={t => this.setState({text: t.trim()})}
+                               onChangeText={t => this.setState({text: t})}
                     />
                     <View>{this.signupComponents()}</View>
 

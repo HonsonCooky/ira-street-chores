@@ -91,7 +91,7 @@ class Chores extends Component {
                     <TextInput style={styles.input2}
                                label={'Chore'} value={this.state.chore}
                                mode={"flat"}
-                               onChangeText={t => this.setState({chore: t.trim()})}
+                               onChangeText={t => this.setState({chore: t})}
                     />
                     <Button mode={"contained"} style={styles.button}
                             loading={this.state.refresh}
