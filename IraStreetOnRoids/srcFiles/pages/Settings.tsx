@@ -57,9 +57,11 @@ class Settings extends Component<ps> {
                                 })
                             } else {
                                 this.setState(this.resetState("Unable to get user data"))
+                                this.setState({name: "Unknown"})
                             }
                         }).catch(() => {
                             this.setState(this.resetState("Unable to get user data"))
+                            this.setState({name: "Unknown"})
                         }))
                     }
                 </View>
