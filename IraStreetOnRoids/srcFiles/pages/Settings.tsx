@@ -184,8 +184,9 @@ class Settings extends Component<ps> {
                         <Text style={styles.para1}> Delete</Text>
                     </Button>
                 </View>
-
-                <Text style={styles.para2}>App version: 1.0.1</Text>
+                <View style={styles.componentNoBack}>
+                    <Text style={styles.para2}>App version: 1.0.1</Text>
+                </View>
             </View>
         )
     }
